@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="index.css" type="text/css" />
+    <title>Weather</title>
+    <style>
+        /* Center the info-box div */
+        .info-box {
+            margin: 0 auto;
+            width: 30%;
+            text-align: center;
+        }
+        #weather-info {
+            border: 5px solid #ccc;
+            background-color: aliceblue;
+            border-radius: 40px;
+            padding: 150px;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+        <ul class="menu">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="meal.html">MEALS</a></li>
+            <li><a href="weather.html">CHECK WHEATHER</a></li>
+        </ul>
+        <!--WEATHER INFORMATION-->
+        <div class="info-box">
+         
+            <h1>Weather Information</h1>
+            <label for="city-select">Select a city:</label>
+            <select id="city-select">
+                <option value="">-- Select a city --</option>
+                <option value="Arapgir">Arapgir</option>
+                <option value="Gokceada">Gokceada</option>
+                <option value="Kemaliye">Kemaliye</option>
+                <option value="Halfeti">Halfeti</option>
+                <option value="Akyaka">Akyaka</option>
+            </select>
+            <!--WEATHER INFO-->
+        <div id="weather-info">
+            <script>
+                const apiKey = "9fd7a449d055dba26a982a3220f32aa2";
+                const baseUrl = "https://api.openweathermap.org/data/2.5/weather?q=";
+
+                const citySelect = document.getElementById("city-select");
+                const weatherInfo = document.getElementById("weather-info");
+
+                citySelect.addEventListener("change", () => {
+                    const city = citySelect.value;
+                    const url = `${baseUrl}${city}&appid=${apiKey}`;
+
+                    fetch(url)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            const name = data.name;
+                            const temp = Math.round(data.main.temp - 273.15);
+                            const weather = data.weather[0].main;
+                            const icon = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+                            const sunriseTime = new Date(data.sys.sunrise * 1000).toLocaleTimeString('tr-TR', { timeZone: 'Europe/Istanbul' });
+                            const sunsetTime = new Date(data.sys.sunset * 1000).toLocaleTimeString('tr-TR', { timeZone: 'Europe/Istanbul' });
+
+                            const html = `
+                                <img src="${icon}" alt="${weather}">
+                                <h2>${name}</h2>
+                                <p>Temperature: ${temp}&deg;C</p>
+                                <p>Weather: ${weather}</p>
+                                <p>Sunrise: ${sunriseTime}</p>
+                                <p>Sunset: ${sunsetTime}</p>
+                            `;
+
+                            weatherInfo.innerHTML = html;
+                        })
+                        .catch((error) => console.error(error));
+                });
+            </script>
+        </div>
+    </header>
+</body>
+</html>
